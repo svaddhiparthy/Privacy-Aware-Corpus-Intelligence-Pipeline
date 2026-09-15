@@ -34,4 +34,3 @@ class Classification:
     freshness: str
     needs_fact_check: bool
     preview: str
-

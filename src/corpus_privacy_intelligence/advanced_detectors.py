@@ -33,7 +33,11 @@ def policy_detector(unit: CorpusUnit) -> DetectorResult:
         name="policy",
         label=label,
         confidence=min(0.99, max(0.50, result.score / 220)),
-        reasons=(result.exclusion_reasons + result.identifier_hits + [topic for topic, _ in result.public_topics[:2]])[:10],
+        reasons=(
+            result.exclusion_reasons
+            + result.identifier_hits
+            + [topic for topic, _ in result.public_topics[:2]]
+        )[:10],
         metadata={"score": result.score, "decision": result.decision},
     )
 
@@ -119,10 +123,16 @@ class PresidioDetector:
         hits = [entity for entity, count in entities.items() if entity in hard_private_entities and count]
         if hits:
             confidence = min(0.98, 0.62 + len(hits) * 0.07)
-            return DetectorResult("presidio", PRIVATE_LABEL, confidence, hits[:10], {"entities": dict(entities)})
-        review_hits = [entity for entity, count in entities.items() if entity in review_entities and count >= 3]
+            return DetectorResult(
+                "presidio", PRIVATE_LABEL, confidence, hits[:10], {"entities": dict(entities)}
+            )
+        review_hits = [
+            entity for entity, count in entities.items() if entity in review_entities and count >= 3
+        ]
         if review_hits:
-            return DetectorResult("presidio", REVIEW_LABEL, 0.55, review_hits[:10], {"entities": dict(entities)})
+            return DetectorResult(
+                "presidio", REVIEW_LABEL, 0.55, review_hits[:10], {"entities": dict(entities)}
+            )
         if len(term_counter(text)) >= 10:
             return DetectorResult("presidio", PUBLIC_LABEL, 0.58, [], {"entities": dict(entities)})
         return DetectorResult("presidio", REVIEW_LABEL, 0.50, [], {"entities": dict(entities)})
@@ -160,7 +170,9 @@ class SpacyDetector:
             reasons = identifier_hits + sorted({value.lower() for value in sensitive_context})
             return DetectorResult("spacy", PRIVATE_LABEL, 0.78, reasons[:10], {"entities": dict(entities)})
         if sum(entities.values()) >= 12:
-            return DetectorResult("spacy", REVIEW_LABEL, 0.55, ["many_entities"], {"entities": dict(entities)})
+            return DetectorResult(
+                "spacy", REVIEW_LABEL, 0.55, ["many_entities"], {"entities": dict(entities)}
+            )
         return DetectorResult("spacy", PUBLIC_LABEL, 0.58, [], {"entities": dict(entities)})
 
 
