@@ -82,7 +82,9 @@ def build_summary(
         "excluded_units": len(excluded_rows),
         "skipped_units": len(skipped_rows),
         "public_topic_counts": dict(Counter(primary_topic(row) for row in public_rows)),
-        "exclusion_reason_counts": dict(Counter(reason for row in excluded_rows for reason in row.exclusion_reasons)),
+        "exclusion_reason_counts": dict(
+            Counter(reason for row in excluded_rows for reason in row.exclusion_reasons)
+        ),
         "identifier_hit_counts": dict(Counter(hit for row in excluded_rows for hit in row.identifier_hits)),
     }
 

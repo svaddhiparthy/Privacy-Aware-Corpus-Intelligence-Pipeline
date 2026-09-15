@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter, defaultdict
-from dataclasses import asdict
 from pathlib import Path
 
 from .classifier import classify
@@ -57,7 +56,9 @@ def agreement_key(labels: list[str]) -> str:
     return "three_way_split"
 
 
-def run_validation(export_dir: Path, out_dir: Path, chunk_chars: int, max_disagreements: int) -> dict[str, object]:
+def run_validation(
+    export_dir: Path, out_dir: Path, chunk_chars: int, max_disagreements: int
+) -> dict[str, object]:
     out_dir.mkdir(parents=True, exist_ok=True)
     validator_counts: dict[str, Counter[str]] = defaultdict(Counter)
     majority_counts: Counter[str] = Counter()
@@ -79,7 +80,9 @@ def run_validation(export_dir: Path, out_dir: Path, chunk_chars: int, max_disagr
         for i in range(len(decisions)):
             for j in range(i + 1, len(decisions)):
                 same = decisions[i].label == decisions[j].label
-                pair_counts[f"{decisions[i].name}__{decisions[j].name}__{'agree' if same else 'disagree'}"] += 1
+                pair_counts[
+                    f"{decisions[i].name}__{decisions[j].name}__{'agree' if same else 'disagree'}"
+                ] += 1
 
         if len(set(labels)) > 1 and len(disagreements) < max_disagreements:
             disagreements.append(
@@ -120,7 +123,10 @@ def write_markdown(path: Path, summary: dict[str, object], disagreements: list[d
     lines = [
         "# Automated Classifier Validation Report",
         "",
-        "This report compares three automated classifiers over the same corpus units. It does not use manual labels.",
+        (
+            "This report compares three automated classifiers over the same corpus units. It does not use "
+            "manual labels."
+        ),
         "",
         f"Units validated: {total}",
         "",
