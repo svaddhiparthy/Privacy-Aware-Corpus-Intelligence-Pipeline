@@ -48,4 +48,3 @@ def test_keeps_general_finance_explainer_without_private_identifier():
 
     assert result.decision == "public_candidate"
     assert result.identifier_hits == []
-

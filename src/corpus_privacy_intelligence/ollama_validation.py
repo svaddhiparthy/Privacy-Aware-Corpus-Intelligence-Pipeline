@@ -11,7 +11,6 @@ from typing import Any
 
 from .reports import md_escape
 
-
 LABELS = {"public", "private", "review"}
 
 
@@ -74,7 +73,11 @@ def call_ollama(model: str, prompt: str, host: str, timeout: int) -> dict[str, A
         parsed = json.loads(text)
     except json.JSONDecodeError:
         match = re.search(r"\{.*\}", text, re.S)
-        parsed = json.loads(match.group(0)) if match else {"label": "review", "confidence": 0.0, "reason": text[:120]}
+        parsed = (
+            json.loads(match.group(0))
+            if match
+            else {"label": "review", "confidence": 0.0, "reason": text[:120]}
+        )
 
     label = str(parsed.get("label", "review")).strip().lower()
     if label not in LABELS:
@@ -104,7 +107,10 @@ def write_markdown(path: Path, results: list[dict[str, Any]], summary: dict[str,
     lines = [
         "# Ollama Disagreement Validation",
         "",
-        "This pass uses a local Ollama model to classify saved disagreement cases. It is an additional local semantic check, not a source of truth by itself.",
+        (
+            "This pass uses a local Ollama model to classify saved disagreement cases. It is an additional "
+            "local semantic check, not a source of truth by itself."
+        ),
         "",
         f"Model: `{summary['model']}`",
         f"Items classified: {summary['items_classified']}",
@@ -117,13 +123,15 @@ def write_markdown(path: Path, results: list[dict[str, Any]], summary: dict[str,
     for key, value in summary["counts"].items():
         lines.append(f"| {key} | {value} |")
 
-    lines.extend([
-        "",
-        "## Results",
-        "",
-        "| # | Title | Local Majority | Ollama | Confidence | Agreement | Reason |",
-        "|---:|---|---|---|---:|---|---|",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Results",
+            "",
+            "| # | Title | Local Majority | Ollama | Confidence | Agreement | Reason |",
+            "|---:|---|---|---|---:|---|---|",
+        ]
+    )
     for index, row in enumerate(results, 1):
         lines.append(
             f"| {index} | {md_escape(row['title'])} | {row['local_majority']} | "
@@ -145,7 +153,9 @@ def write_outputs(out_dir: Path, results: list[dict[str, Any]], summary: dict[st
     write_markdown(out_dir / "ollama_validation_report.md", results, summary)
 
 
-def build_summary(model: str, input_path: Path, items_available: int, results: list[dict[str, Any]]) -> dict[str, Any]:
+def build_summary(
+    model: str, input_path: Path, items_available: int, results: list[dict[str, Any]]
+) -> dict[str, Any]:
     counts = Counter()
     counts.update(f"ollama_{row['ollama_label']}" for row in results)
     counts.update(f"local_{row['local_majority']}" for row in results)
