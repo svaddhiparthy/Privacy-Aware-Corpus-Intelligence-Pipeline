@@ -56,14 +56,16 @@ def write_public_markdown(path: Path, rows: list[Classification]) -> None:
     for index, row in enumerate(rows[:100], 1):
         terms = ", ".join(term for term, _ in row.top_terms[:15])
         topics = ", ".join(topic for topic, _ in row.public_topics[:3])
-        lines.extend([
-            f"### {index}. {row.title}",
-            f"- Unit: {row.unit_type} {row.chunk_index if row.unit_type == 'chunk' else ''}".rstrip(),
-            f"- Topics: {topics}",
-            f"- Terms: {terms}",
-            f"- Preview: {md_escape(row.preview)}",
-            "",
-        ])
+        lines.extend(
+            [
+                f"### {index}. {row.title}",
+                f"- Unit: {row.unit_type} {row.chunk_index if row.unit_type == 'chunk' else ''}".rstrip(),
+                f"- Topics: {topics}",
+                f"- Terms: {terms}",
+                f"- Preview: {md_escape(row.preview)}",
+                "",
+            ]
+        )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -113,19 +115,24 @@ def write_topic_summary(
     for reason, count in dict(summary.get("exclusion_reason_counts", {})).items():
         lines.append(f"- {reason}: {count}")
 
-    lines.extend([
-        "",
-        "## Draft Review Schedule",
-        "",
-        "| # | Date | Title | Primary Topic | Pre-Publish Action |",
-        "|---:|---|---|---|---|",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Draft Review Schedule",
+            "",
+            "| # | Date | Title | Primary Topic | Pre-Publish Action |",
+            "|---:|---|---|---|---|",
+        ]
+    )
     start = datetime(2026, 5, 6)
-    scheduled = sorted(public_rows, key=lambda row: (not row.needs_fact_check, -row.score, row.title.lower()))[:156]
+    scheduled = sorted(
+        public_rows, key=lambda row: (not row.needs_fact_check, -row.score, row.title.lower())
+    )[:156]
     for index, row in enumerate(scheduled, 1):
         date = (start + timedelta(days=7 * (index - 1))).strftime("%Y-%m-%d")
         action = "Fact-check, then write" if row.needs_fact_check else "Write as evergreen"
-        lines.append(f"| {index} | {date} | {md_escape(row.title)} | {md_escape(primary_topic(row))} | {action} |")
+        lines.append(
+            f"| {index} | {date} | {md_escape(row.title)} | {md_escape(primary_topic(row))} | {action} |"
+        )
 
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-

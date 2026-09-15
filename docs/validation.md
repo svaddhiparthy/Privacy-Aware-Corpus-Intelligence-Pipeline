@@ -9,12 +9,24 @@ python -m compileall src tests
 
 ## Covered Behaviors
 
-The current tests validate that:
+The suite covers, per module:
 
-- SSN-like identifiers are excluded;
-- immigration context is excluded;
-- general technical content is retained;
-- general finance explanatory content is retained when no private identifier is present.
+- every direct-identifier category, with a test asserting no pattern ships untested;
+- the three full-corpus validators and the majority vote between them;
+- the weighted ensemble router, including that privacy overrides a public majority and that a
+  detector which could not run does not tilt the route;
+- synthetic privacy fixtures: ten cases that must never reach public output, three legitimate
+  public near-misses, and a check that a classification never republishes the identifier it
+  excluded on.
+
+## Regression Gate
+
+`tests/test_privacy_fixtures.py` is the policy gate. It caught a real calibration defect: the
+bare tokens `health`, `lab`, `sleep`, `weight` and `pain` in `private_health` were excluding
+ordinary engineering vocabulary such as "health check", "home lab", "sleep mode", "weight
+matrix" and "pain point". Those terms are now matched as phrases, and both directions are
+pinned: the engineering homonyms must stay available, and the same words in a genuine health
+context must stay excluded.
 
 ## Policy Review Areas
 

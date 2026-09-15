@@ -136,7 +136,10 @@ def write_outputs(out_dir: Path, rows: list[dict[str, Any]], summary: dict[str, 
     lines = [
         "# Advanced Free Non-LLM Validation Report",
         "",
-        "This report combines the current policy classifier, strict rules, semantic scoring, optional Presidio, and optional spaCy.",
+        (
+            "This report combines the current policy classifier, strict rules, semantic scoring, optional "
+            "Presidio, and optional spaCy."
+        ),
         "",
         f"Units analyzed: {summary['units_analyzed']}",
         "",
@@ -146,16 +149,28 @@ def write_outputs(out_dir: Path, rows: list[dict[str, Any]], summary: dict[str, 
         "|---|---:|---:|---:|",
     ]
     for name, counts in summary["detector_counts"].items():
-        lines.append(f"| {name} | {counts.get(PUBLIC_LABEL, 0)} | {counts.get(PRIVATE_LABEL, 0)} | {counts.get(REVIEW_LABEL, 0)} |")
+        lines.append(
+            f"| {name} | {counts.get(PUBLIC_LABEL, 0)} | "
+            f"{counts.get(PRIVATE_LABEL, 0)} | {counts.get(REVIEW_LABEL, 0)} |"
+        )
     lines.extend(["", "## Ensemble Counts", "", "| Label | Count |", "|---|---:|"])
     for label, count in summary["ensemble_counts"].items():
         lines.append(f"| {label} | {count} |")
-    lines.extend(["", "## Sample Rows", "", "| # | Title | Unit | Ensemble | Detectors | Preview |", "|---:|---|---|---|---|---|"])
+    lines.extend(
+        [
+            "",
+            "## Sample Rows",
+            "",
+            "| # | Title | Unit | Ensemble | Detectors | Preview |",
+            "|---:|---|---|---|---|---|",
+        ]
+    )
     for index, row in enumerate(rows[:150], 1):
         unit = row["unit_type"] if row["unit_type"] == "conversation" else f"chunk {row['chunk_index']}"
         detectors = "; ".join(f"{d['name']}={d['label']}" for d in row["detectors"])
         lines.append(
-            f"| {index} | {md_escape(row['title'])} | {unit} | {row['ensemble_label']} ({row['ensemble_confidence']:.2f}) | "
+            f"| {index} | {md_escape(row['title'])} | {unit} | "
+            f"{row['ensemble_label']} ({row['ensemble_confidence']:.2f}) | "
             f"{md_escape(detectors)} | {md_escape(row['preview'])} |"
         )
     (out_dir / "advanced_validation_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

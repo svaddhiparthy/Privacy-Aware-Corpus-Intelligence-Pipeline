@@ -1,0 +1,124 @@
+{
+  "_about": "Aggregate results of the recorded pipeline runs. Counts only: no corpus text, titles, topics of individual records, or source-file identifiers appear here. This file is the single source of truth for every number published on the public project page, so the page cannot drift from the system.",
+  "_provenance": {
+    "corpus": "Private personal conversation export. Not committed, so a full run is not reproducible by a third party. The aggregates below are.",
+    "sample_run_source": "docs/advanced_non_llm_validation.md, committed in this repository",
+    "full_run_source": "Recorded full-corpus pass with the same code path",
+    "schema_version": 1,
+    "taxonomy_note": "These counts were produced before the private_health calibration fix of 2026-09-14, which stopped the bare tokens health, lab, sleep, weight and pain from excluding ordinary engineering vocabulary such as health check, home lab, sleep mode, weight matrix and pain point. A re-run on the same corpus would therefore return MORE public candidates and fewer sensitive-domain exclusions. The figures are published as the recorded run, not as current behaviour. See tests/test_privacy_fixtures.py.",
+    "recorded_run_code_version": "pre-calibration (taxonomy before 2026-09-14)"
+  },
+  "corpus": {
+    "units_scanned": 11336,
+    "public_candidates": 3078,
+    "excluded_units": 8227,
+    "skipped_low_signal": 31,
+    "identifier_categories": 7,
+    "public_topic_groups": 10,
+    "_check": "public_candidates + excluded_units + skipped_low_signal == units_scanned"
+  },
+  "public_topic_groups": [
+    {
+      "topic": "Software/Data/Automation",
+      "units": 761
+    },
+    {
+      "topic": "AI/Agents/LLM",
+      "units": 669
+    },
+    {
+      "topic": "Product Reviews/Buying",
+      "units": 388
+    },
+    {
+      "topic": "Infrastructure/Home Lab",
+      "units": 382
+    },
+    {
+      "topic": "Learning/Tutorials",
+      "units": 329
+    },
+    {
+      "topic": "Food/Home",
+      "units": 194
+    },
+    {
+      "topic": "Philosophy/Systems",
+      "units": 130
+    },
+    {
+      "topic": "Consumer Finance",
+      "units": 94
+    },
+    {
+      "topic": "Vehicles/OBD/Mobility",
+      "units": 67
+    },
+    {
+      "topic": "Creative/Culture/Publishing",
+      "units": 64
+    }
+  ],
+  "full_corpus_validators": {
+    "_scope": "All 11,336 units. Labels are the three-way validator labels, not the pipeline's four-way decisions. policy_classifier() maps exclude_* to private, public_candidate to public, and skip_low_signal to review, which is why its review count equals skipped_low_signal.",
+    "policy_classifier": {
+      "public": 3078,
+      "private": 8227,
+      "review": 31
+    },
+    "strict_detector": {
+      "public": 2857,
+      "private": 7849,
+      "review": 630
+    },
+    "semantic_score_classifier": {
+      "public": 2961,
+      "private": 7938,
+      "review": 437
+    }
+  },
+  "sample_validators": {
+    "_scope": "300-unit calibrated sample. Presidio and spaCy are CPU-expensive, so they are validated on a bounded sample rather than the full corpus.",
+    "_source": "docs/advanced_non_llm_validation.md",
+    "sample_size": 300,
+    "policy_classifier": {
+      "public": 179,
+      "private": 121,
+      "review": 0
+    },
+    "strict_detector": {
+      "public": 120,
+      "private": 108,
+      "review": 72
+    },
+    "semantic_score_classifier": {
+      "public": 154,
+      "private": 111,
+      "review": 35
+    },
+    "presidio": {
+      "public": 86,
+      "private": 54,
+      "review": 160
+    },
+    "spacy": {
+      "public": 49,
+      "private": 55,
+      "review": 196
+    },
+    "weighted_ensemble": {
+      "public": 144,
+      "private": 111,
+      "review": 45
+    }
+  },
+  "agreement": {
+    "_scope": "Full corpus, across the three full-corpus validators.",
+    "majority_public_pct": 26.58,
+    "majority_private_pct": 70.02,
+    "majority_review_pct": 3.4,
+    "unanimous_pct": 87.02,
+    "two_to_one_pct": 12.54,
+    "three_way_split_pct": 0.43
+  }
+}

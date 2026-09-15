@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from .models import CorpusUnit
 
@@ -73,9 +74,10 @@ def iter_units(export_dir: Path, chunk_chars: int) -> Iterable[CorpusUnit]:
     for path, conversation in iter_conversations(export_dir):
         sequence += 1
         title = conversation.get("title") or "(untitled)"
-        conversation_id = conversation.get("id") or hashlib.sha1(
-            f"{path.name}:{sequence}:{title}".encode("utf-8")
-        ).hexdigest()[:16]
+        conversation_id = (
+            conversation.get("id")
+            or hashlib.sha1(f"{path.name}:{sequence}:{title}".encode()).hexdigest()[:16]
+        )
         messages = extract_messages(conversation)
         if not messages:
             continue
@@ -103,4 +105,3 @@ def iter_units(export_dir: Path, chunk_chars: int) -> Iterable[CorpusUnit]:
                 chunk_index=index,
                 text=f"TITLE: {title}\n\n{chunk}",
             )
-
