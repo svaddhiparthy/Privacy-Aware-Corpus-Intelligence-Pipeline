@@ -12,6 +12,37 @@ python -m corpus_privacy_intelligence.cli `
   --chunk-chars 9000
 ```
 
+The installed console script `corpus-privacy-intelligence` takes the same flags.
+
+| Flag | Default | Effect |
+| --- | --- | --- |
+| `--export-dir` | required | Directory holding `conversations-*.json` |
+| `--out-dir` | required | Created if absent; receives all seven artifacts |
+| `--min-public-score` | `55.0` | Release gate; below it a candidate is demoted to low signal |
+| `--chunk-chars` | `9000` | Target chunk size on the recovery path |
+
+## Run Checks
+
+Each run writes `scan_summary.json`. Before trusting a run, confirm the reconciliation holds:
+
+```text
+units_scanned == public_candidate_units + excluded_units + skipped_units
+```
+
+`scan_summary.json` is the authoritative count record. `skipped_low_signal.json` is truncated at 2000 rows by design and must not be used for reconciliation.
+
+## Cross-Detector Validation
+
+```powershell
+python -m corpus_privacy_intelligence.validation `
+  --export-dir "C:\path\to\export" `
+  --out-dir "outputs\validation" `
+  --chunk-chars 9000 `
+  --max-disagreements 500
+```
+
+Writes `automated_validation_summary.json`, `automated_validation_disagreements.json`, and `automated_validation_report.md`.
+
 ## Output Handling
 
 Generated outputs may contain sensitive previews and should stay outside Git unless deliberately sanitized.

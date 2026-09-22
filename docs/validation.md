@@ -7,6 +7,16 @@ python -m pytest -q
 python -m compileall src tests
 ```
 
+86 tests. Every fixture is synthetic; no corpus text is committed to this repository.
+
+## Continuous Integration
+
+`.github/workflows/ci.yml` runs three jobs on Python 3.11 for every push and every pull request into `main`:
+
+1. Lint: `ruff check .` and `ruff format --check .`, pinned to ruff 0.8.6.
+2. Tests: `pip install -e ".[dev]"` then `python -m pytest -q`, from a clean clone.
+3. Published claims: `scripts/check_published_numbers.py` asserts the recorded aggregates reconcile and match this documentation set, and `scripts/export_page_snippets.py` asserts the code shown on the project page still exists verbatim in `src/`.
+
 ## Covered Behaviors
 
 The suite covers, per module:

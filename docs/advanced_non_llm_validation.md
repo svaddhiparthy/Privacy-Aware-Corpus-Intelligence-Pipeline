@@ -34,10 +34,10 @@ The advanced validation command writes:
 ## Example Command
 
 ```powershell
-$env:PYTHONPATH='src'
 python -m corpus_privacy_intelligence.advanced_validation `
   --export-dir "C:\path\to\export" `
   --out-dir "outputs\advanced_validation" `
+  --chunk-chars 9000 `
   --limit 300
 ```
 
