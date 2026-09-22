@@ -2,11 +2,9 @@
 
 [![CI](https://github.com/Vaddhiparthy/Privacy-Aware-Corpus-Intelligence-Pipeline/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Vaddhiparthy/Privacy-Aware-Corpus-Intelligence-Pipeline/actions/workflows/ci.yml)
 
-**Portfolio:** [vaddhiparthy.com](https://vaddhiparthy.com/) | [Data Platforms](https://vaddhiparthy.com/data-platforms)
+**Live:** [vaddhiparthy.com/Privacy-Aware-Corpus-Intelligence-Pipeline](https://vaddhiparthy.com/Privacy-Aware-Corpus-Intelligence-Pipeline)
 
 This repository implements a local-first classification pipeline for large text exports that contain a mix of reusable knowledge and sensitive personal material.
-
-Public presentation: <https://vaddhiparthy.com/Privacy-Aware-Corpus-Intelligence-Pipeline>
 
 ## Implemented System
 
@@ -143,7 +141,7 @@ Presidio and spaCy are optional. If they are unavailable, the validation runner 
 
 ### Optional Ollama Disagreement Validation
 
-When the independent detectors disagree, `validation.py` records those cases to `automated_validation_disagreements.json`. The optional `ollama_validation` command re-checks each saved disagreement with a local [Ollama](https://ollama.com) model so a second semantic opinion can be compared against the local majority label. This stays fully local: it calls a model running on `127.0.0.1` and never sends the corpus to a hosted service.
+When the independent detectors disagree, `validation.py` records those cases to `automated_validation_disagreements.json`. The optional `ollama_validation` command re-checks each saved disagreement with a local Ollama model so a second semantic opinion can be compared against the local majority label. This stays fully local: it calls a model running on `127.0.0.1` and never sends the corpus to a hosted service.
 
 ```powershell
 python -m corpus_privacy_intelligence.ollama_validation `
