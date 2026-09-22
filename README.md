@@ -458,9 +458,6 @@ request into `main`:
 │   └── export_page_snippets.py              source-to-artifact snippet generator
 ├── tests/                                   synthetic fixtures and contract tests
 └── docs/
-    ├── architecture.md                      component and routing reference
-    ├── operations.md                        run and output-handling guidance
-    ├── validation.md                        test surface and regression-gate notes
     ├── advanced_non_llm_validation.md       optional detector layer and calibration notes
     └── artifacts/
         ├── corpus_run/summary.json          recorded-run aggregates, the artifact of record

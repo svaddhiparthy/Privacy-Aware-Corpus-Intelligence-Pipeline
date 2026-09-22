@@ -35,7 +35,7 @@ corpus-privacy-intelligence = "corpus_privacy_intelligence.cli:main"
 where = ["src"]
 
 [tool.pytest.ini_options]
-# Without this a clean clone fails with ModuleNotFoundError, even though docs/validation.md
+# Without this a clean clone fails with ModuleNotFoundError, even though the README
 # tells the reader to run `python -m pytest -q`.
 testpaths = ["tests"]
 pythonpath = ["src"]
