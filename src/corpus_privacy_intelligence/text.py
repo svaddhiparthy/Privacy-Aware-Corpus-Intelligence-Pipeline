@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from collections import Counter
-from collections.abc import Iterable
 
 STOPWORDS = {
     "a",
@@ -140,18 +139,6 @@ def tokenize(text: str) -> list[str]:
 
 def term_counter(text: str) -> Counter[str]:
     return Counter(tokenize(text))
-
-
-def phrase_count(text: str, terms: Iterable[str]) -> int:
-    text_l = text.lower()
-    total = 0
-    for term in terms:
-        term_l = term.lower()
-        if " " in term_l or "-" in term_l:
-            total += text_l.count(term_l)
-        else:
-            total += len(re.findall(rf"\b{re.escape(term_l)}s?\b", text_l))
-    return total
 
 
 def compact_preview(text: str, limit: int = 360) -> str:

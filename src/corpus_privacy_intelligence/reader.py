@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-import hashlib
 import json
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
-
-from .models import CorpusUnit
 
 
 def load_json(path: Path) -> Any:
@@ -67,41 +64,3 @@ def iter_conversations(export_dir: Path) -> Iterable[tuple[Path, dict[str, Any]]
             continue
         for conversation in data:
             yield path, conversation
-
-
-def iter_units(export_dir: Path, chunk_chars: int) -> Iterable[CorpusUnit]:
-    sequence = 0
-    for path, conversation in iter_conversations(export_dir):
-        sequence += 1
-        title = conversation.get("title") or "(untitled)"
-        conversation_id = (
-            conversation.get("id")
-            or hashlib.sha1(f"{path.name}:{sequence}:{title}".encode()).hexdigest()[:16]
-        )
-        messages = extract_messages(conversation)
-        if not messages:
-            continue
-
-        full_text = f"TITLE: {title}\n\n" + "\n\n".join(
-            f"{message['role'].upper()}: {message['text']}" for message in messages
-        )
-        yield CorpusUnit(
-            unit_id=f"{conversation_id}:conversation",
-            source_file=path.name,
-            conversation_id=conversation_id,
-            title=title,
-            unit_type="conversation",
-            chunk_index=0,
-            text=full_text,
-        )
-
-        for index, chunk in enumerate(chunk_messages(messages, chunk_chars), 1):
-            yield CorpusUnit(
-                unit_id=f"{conversation_id}:chunk:{index}",
-                source_file=path.name,
-                conversation_id=conversation_id,
-                title=title,
-                unit_type="chunk",
-                chunk_index=index,
-                text=f"TITLE: {title}\n\n{chunk}",
-            )
