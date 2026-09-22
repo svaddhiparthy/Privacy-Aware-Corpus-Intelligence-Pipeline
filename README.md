@@ -1,7 +1,9 @@
 # Privacy-Aware Corpus Intelligence Pipeline
 
+[![CI](https://github.com/Vaddhiparthy/Privacy-Aware-Corpus-Intelligence-Pipeline/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Vaddhiparthy/Privacy-Aware-Corpus-Intelligence-Pipeline/actions/workflows/ci.yml)
 
 **Portfolio:** [vaddhiparthy.com](https://vaddhiparthy.com/) | [Data Platforms](https://vaddhiparthy.com/data-platforms)
+
 This repository implements a local-first classification pipeline for large text exports that contain a mix of reusable knowledge and sensitive personal material.
 
 Public presentation: <https://vaddhiparthy.com/Privacy-Aware-Corpus-Intelligence-Pipeline>
